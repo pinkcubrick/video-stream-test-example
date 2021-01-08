@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>video.js test</title>
+  <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+
+  <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+  <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+  <script>
+    function play() {
+      var player = videojs('video');
+      player.src({
+        src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+      });
+      player.ready(function () {
+        player.play();
+      });
+    }
+
+    function isPlaying() {
+      var player = videojs('video');
+      return player && player.currentTime() > 0 && !player.paused() && !player.ended();
+    }
+
+    function check() {
+      var playing = 'is not playing';
+      if (isPlaying()) {
+        playing = "is playing";
+      }
+      var info = playing;
+      document.getElementById('checkResult').innerText = info;
+    }
+  </script>
+</head>
+
+<body>
+  <input type="button" id="btnPlay" value="Play" onclick="play();">
+  <input type="button" id="btnCheck" value="Check" onclick="check();">
+  <div id="checkResult"></div>
+  <video id="video" class="video-js" width="320" height="180">
+  </video>
+  <div id="log" style="height:120px;width:320px;border:1px solid;font-size:x-small;overflow:auto;"></div>
+  <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+  <script>
+    if (!console) {
+      console = {};
+    }
+    var old = console.log;
+    var logElem = document.getElementById('log');
+    console.log = function () {
+      var msg = Array.prototype.slice.call(arguments).join(' ');
+      logElem.innerHTML += msg + '<br />';
+      logElem.scrollTop = logElem.scrollHeight;
+    }
+    console.error = console.debug = console.info = console.log;
+
+    videojs.log.level('all');
+  </script>
+
+</body>
+
+</html>

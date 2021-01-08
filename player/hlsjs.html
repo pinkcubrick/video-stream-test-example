@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>hls.js test</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    function play() {
+      var video = document.getElementById('video');
+      var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+      if (Hls.isSupported()) {
+        const config = {
+          debug: true
+        };
+        var hls = new Hls(config);
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+        video.play();
+      }
+    }
+
+    function isPlaying() {
+      var video = document.getElementById('video');
+      return video && video.currentTime > 0 && !video.paused && !video.ended
+    }
+
+    function check() {
+      var playing = 'is not playing';
+      if (isPlaying()) {
+        playing = "is playing";
+      }
+      var video = document.getElementById('video');
+      var info = playing;
+      document.getElementById('checkResult').innerText = info;
+    }
+  </script>
+</head>
+
+<body>
+  <input type="button" id="btnPlay" value="Play" onclick="play();">
+  <input type="button" id="btnCheck" value="Check" onclick="check();">
+  <div id="checkResult"></div>
+  <video id="video" width="320"></video>
+  <div id="log" style="height:120px;width:320px;border:1px solid;font-size:x-small;overflow:auto;"></div>
+  <script>
+    if (!console) {
+      console = {};
+    }
+    var old = console.log;
+    var logElem = document.getElementById('log');
+    console.log = function (message) {
+      if (typeof message == 'object') {
+        logElem.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : String(message)) + '<br />';
+      } else {
+        logElem.innerHTML += message + '<br />';
+      }
+      logElem.scrollTop = logElem.scrollHeight;
+    }
+    console.error = console.debug = console.info = console.log
+  </script>
+</body>
+
+</html>
